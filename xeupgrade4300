@@ -1,0 +1,255 @@
+<config>
+
+<devices xmlns="http://tail-f.com/ns/ncs">
+               <device>
+                 <name>{$DEVICE_NAME}</name>
+                 <config>
+                   <file xmlns="urn:ios">
+                     <prompt>quiet</prompt>
+                   </file>
+                   <event xmlns="urn:ios">
+                     <manager>
+                       <applet>
+                         <name>upgrade_xe_to_sdwan_execute</name>
+                         <event>
+                           <none>
+                             <maxrun>300</maxrun>
+                           </none>
+                         </event>
+                         <action>
+                           <name>1.0</name>
+                           <cli>
+                             <command>enable</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>2.0</name>
+                           <cli>
+                             <command>copy run bootflash:original-xe-config</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>3.0</name>
+                           <cli>
+                             <command>config t</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>4.0</name>
+                           <cli>
+                             <command>no boot system</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>5.0</name>
+                           <cli>
+                             <command>do wr mem</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>6.0</name>
+                           <cli>
+                             <command>boot system flash bootflash:{$C4300_SDWAN_IMAGE}</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>7.0</name>
+                           <cli>
+                             <command>do wr mem</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>8.0</name>
+                           <cli>
+                             <command>do write erase</command>
+                             <pattern>[confirm]</pattern>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.0</name>
+                           <cli>
+                             <command>config-register 0x2102</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.5</name>
+                           <wait>60</wait>
+                         </action>
+                         <action>
+                           <name>9.8</name>
+                           <cli>
+                             <command>do reload</command>
+                             <pattern>[confirm]</pattern>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.9</name>
+                           <cli>
+                             <command/>
+                           </cli>
+                         </action>
+                       </applet>
+                       <applet>
+                         <name>upgrade_xe_to_xe_execute</name>
+                         <event>
+                           <none>
+                             <maxrun>300</maxrun>
+                           </none>
+                         </event>
+                         <action>
+                           <name>1.0</name>
+                           <cli>
+                             <command>enable</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>2.0</name>
+                           <cli>
+                             <command>copy run bootflash:original-xe-config</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>3.0</name>
+                           <cli>
+                             <command>config t</command>
+                           </cli>
+                         </action>
+                         <action>
+                          <name>4.0</name>
+                           <cli>
+                             <command>no boot system</command>
+                           </cli>
+                         </action>
+                         <action>
+                          <name>5.0</name>
+                           <cli>
+                             <command>do wr</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>6.0</name>
+                           <cli>
+                             <command>boot system flash bootflash:newiosxe.SPA.bin</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>7.0</name>
+                           <cli>
+                             <command>do wr mem</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.0</name>
+                           <cli>
+                             <command>config-register 0x2102</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.5</name>
+                           <wait>60</wait>
+                         </action>
+                         <action>
+                           <name>9.8</name>
+                           <cli>
+                             <command>do reload</command>
+                             <pattern>[confirm]</pattern>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>9.9</name>
+                           <cli>
+                             <command/>
+                           </cli>
+                         </action>
+                       </applet>
+                       <applet>
+                         <name>upgrade_xe_to_sdwan_prep</name>
+                         <event>
+                           <none>
+                             <maxrun>3600</maxrun>
+                           </none>
+                         </event>
+                         <action>
+                           <name>1.0</name>
+                           <cli>
+                             <command>enable</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>2.0</name>
+                           <cli>
+                             <command>copy http://172.18.143.200/images/4300/{$C4300_ROMMON_IMAGE} bootflash:</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>3.0</name>
+                           <cli>
+                             <command>copy http://172.18.143.200/images/4300/{$C4300_SDWAN_IMAGE} bootflash:</command>
+                           </cli>
+                         </action>
+                       </applet>
+                       <applet>
+                         <name>upgrade_xe_to_xe_prep</name>
+                         <event>
+                           <none>
+                             <maxrun>3600</maxrun>
+                           </none>
+                         </event>
+                         <action>
+                           <name>1.0</name>
+                           <cli>
+                             <command>enable</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>2.0</name>
+                           <cli>
+                             <command>copy http://172.18.143.200/images/4300/{$C4300_ROMMON_IMAGE} bootflash:newrommon.pkg</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>3.0</name>
+                           <cli>
+                             <command>copy http://172.18.143.200/images/4300/{$C4300_XE_IMAGE} bootflash:newiosxe.SPA.bin</command>
+                           </cli>
+                         </action>
+                       </applet>
+                       <applet>
+                         <name>upgrade_rommon</name>
+                         <event>
+                           <none>
+                             <maxrun>300</maxrun>
+                           </none>
+                         </event>
+                         <action>
+                           <name>1.0</name>
+                           <cli>
+                             <command>enable</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>2.0</name>
+                           <cli>
+                             <command>config t</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>3.0</name>
+                           <cli>
+                             <command>exit</command>
+                           </cli>
+                         </action>
+                         <action>
+                           <name>4.0</name>
+                           <cli>
+                             <command>upgrade rom-monitor filename bootflash:newrommon.pkg all</command>
+                           </cli>
+                         </action>
+                       </applet>
+                     </manager>
+                   </event>
+                 </config>
+               </device>
+             </devices>
+
+</config>
